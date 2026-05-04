@@ -65,7 +65,9 @@ export default function Login() {
     },
 
     onError: (err) => {
-      setApiError(err.message || "Something went wrong");
+
+      setApiError(err?.error_description || "Invalid email or password");
+
     },
   });
 
