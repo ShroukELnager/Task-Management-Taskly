@@ -7,7 +7,51 @@ function handleError(message, status = 500) {
   return Response.json({ error: message }, { status });
 }
 
-// UPDATE PROJECT
+export async function GET(_req, { params }) {
+  try {
+    const { access_token } = await getTokens();
+
+    if (!access_token) {
+      return handleError("Unauthorized", 401);
+    }
+
+    if (!API_KEY) {
+      return handleError("Missing API key", 500);
+    }
+
+    const routeParams = await params;
+    const projectId = routeParams?.id;
+
+    if (!projectId) {
+      return handleError("Project id is required", 400);
+    }
+
+    const res = await fetch(
+      `${BASE_URL}/rest/v1/projects?id=eq.${projectId}`,
+      {
+        method: "GET",
+        headers: {
+          apikey: API_KEY,
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return handleError(
+        data?.message || "Failed to fetch project",
+        res.status
+      );
+    }
+
+    return Response.json({ data });
+  } catch (err) {
+    return handleError(err.message || "Something went wrong");
+  }
+}
+
 export async function PATCH(req, { params }) {
   try {
     const { access_token } = await getTokens();
@@ -17,14 +61,13 @@ export async function PATCH(req, { params }) {
       return handleError("Unauthorized", 401);
     }
 
-    // ✅ check env
     if (!API_KEY) {
       return handleError("Missing API key", 500);
     }
 
-    const projectId = params?.id;
+    const routeParams = await params;
+    const projectId = routeParams?.id;
 
-    // ✅ validation
     if (!projectId) {
       return handleError("Project id is required", 400);
     }
@@ -49,7 +92,6 @@ export async function PATCH(req, { params }) {
       }
     );
 
-    // ✅ handle API errors
     if (!res.ok) {
       const errorData = await res.json();
       return handleError(

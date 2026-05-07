@@ -33,7 +33,6 @@ export async function POST() {
     return Response.json(data, { status: 400 });
   }
 
-  // update cookies
   cookieStore.set("access_token", data.access_token, {
     httpOnly: true,
     secure,

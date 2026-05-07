@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
@@ -9,9 +9,11 @@ import EpicsError from "@/app/components/errorsPages/epics";
 import Image from "next/image";
 
 import { getProjectMembers } from "@/app/services/members.service";
+import SendInvitationModal from "@/app/components/overlays/sendInvitationModal";
 
 export default function MembersPage() {
   const { projectId } = useParams();
+const [open, setOpen] = useState(false);
 
 const {
   data: members = [],
@@ -45,16 +47,19 @@ const {
       </div>
     );
 
-  return (
+  return (<>
+   <SendInvitationModal open={open} onClose={() => setOpen(false)} />
+
     <div className="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto overflow-x-hidden">
 
       <h1 className="text-2xl font-semibold text-center lg:text-left mb-6">
         Project Members
       </h1>
 
-      {/* Invite Button */}
       <div className="hidden sm:flex justify-end mb-6">
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition flex items-center gap-2">
+        <button
+        onClick={()=>{setOpen(true)}}
+         className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition flex items-center gap-2">
           <Image
             src="/images/invite.svg"
             alt="Invite"
@@ -65,7 +70,6 @@ const {
         </button>
       </div>
 
-      {/* TABLE */}
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
 
         <div className="hidden sm:grid grid-cols-3 p-4 text-xs text-gray-500 font-medium border-b">
@@ -120,8 +124,8 @@ const {
         })}
       </div>
 
-      {/* Mobile FAB */}
       <button
+        onClick={() => setOpen(true)}
         className="
           sm:hidden
           fixed bottom-6 right-6
@@ -139,6 +143,7 @@ const {
           height={20}
         />
       </button>
-    </div>
+    </div></>
+   
   );
 }

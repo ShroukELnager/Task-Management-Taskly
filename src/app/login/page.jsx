@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,8 +12,8 @@ import { useMutation } from "@tanstack/react-query";
 
 import { loginSchema } from "../components/schema/loginschema";
 
-import { getValidAccessToken } from "../api2/utils/auth";
-import { login } from "../services/auth.service"; 
+import { getValidAccessToken } from "../lib/auth/auth";
+import { login } from "../services/auth.service";
 import { setAccessToken, setUser } from "../features/users/userSlice";
 
 export default function Login() {
@@ -22,7 +22,8 @@ export default function Login() {
 
   const [apiError, setApiError] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
   const {
     register,
     handleSubmit,
@@ -58,9 +59,9 @@ export default function Login() {
 
       dispatch(setAccessToken(validToken || access_token));
       dispatch(setUser(user));
-console.log(user);
+      console.log(user);
 
-      router.push("/projects");
+      router.push(redirect || "/projects");
     },
 
     onError: (err) => {
@@ -74,12 +75,12 @@ console.log(user);
 
       if (token) {
         dispatch(setAccessToken(token));
-        router.push("/projects");
+        router.push(redirect || "/projects");
       }
     };
 
     checkToken();
-  }, []);
+  }, [dispatch, redirect, router]);
 
   const onSubmit = (data) => {
     setApiError("");
@@ -110,9 +111,7 @@ console.log(user);
           )}
 
           <div className="space-y-1">
-            <label className="text-sm text-[#8691A4] font-medium">
-              EMAIL
-            </label>
+            <label className="text-sm text-[#8691A4] font-medium">EMAIL</label>
             <input
               type="email"
               {...register("email")}
@@ -133,9 +132,7 @@ console.log(user);
               className="w-full h-12 px-3 rounded-md border bg-[#D7E2FF]"
             />
             {errors.password && (
-              <p className="text-red-500 text-sm">
-                {errors.password.message}
-              </p>
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
             )}
           </div>
 

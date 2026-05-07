@@ -13,7 +13,7 @@ async function handleResetPassword(req) {
     const body = await req.json();
     const { accessToken, ...payload } = body;
 
-    const { access_token: cookieAccessToken } = await getTokens();
+    const { access_token } = await getTokens();
     const token = accessToken || cookieAccessToken;
 
     if (!token) {

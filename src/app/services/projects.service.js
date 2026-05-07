@@ -8,16 +8,17 @@ export async function getProjects() {
 
   return result;
 }
-// services/projects.service.js
 export async function getProjectById(id) {
-  const res = await fetch(`/api/projects?id=${id}`);
+  const res = await fetch(`/api/projects/${id}`, {
+    credentials: "include",
+  });
   const result = await res.json();
 
   if (!res.ok) {
     throw new Error(result?.error || "Failed to fetch project");
   }
 
-  return result;
+  return result?.data?.[0] || result?.data || result;
 }
 export async function createProject(data) {
   const res = await fetch("/api/projects", {

@@ -10,7 +10,6 @@ function handleError(message, status = 500) {
   return Response.json({ error: message }, { status });
 }
 
-// ================= GET =================
 export async function GET(req) {
   try {
     const { access_token } = await getTokens();
@@ -60,7 +59,6 @@ export async function GET(req) {
   }
 }
 
-// ================= POST =================
 export async function POST(req) {
   try {
     const { access_token } = await getTokens();

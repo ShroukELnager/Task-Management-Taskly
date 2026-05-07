@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useRef, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { getValidAccessToken } from "@/app/api2/utils/auth";
+import { getValidAccessToken } from "@/app/lib/auth/auth";
 import { fetchUsers } from "@/app/features/users/usersThunk";
 
 export default function Navbar() {
@@ -20,8 +20,7 @@ export default function Navbar() {
   // ✅ FIX: Supabase user shape
   const name = user?.user_metadata?.name || "No name provided";
 
-  const jobTitle =
-    user?.user_metadata?.job_title || "No job title provided";
+  const jobTitle = user?.user_metadata?.job_title || "No job title provided";
 
   const email = user?.email || "No email";
 
@@ -72,7 +71,7 @@ export default function Navbar() {
             apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (!res.ok) throw new Error("Logout failed");

@@ -1,55 +1,29 @@
 "use client";
-import Cookies from "js-cookie";
 
 import Link from "next/link";
 import { usePathname, useParams } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useMemo } from "react";
 import { generateBreadcrumbs } from "./generateBreadcrumbs";
+import { useProjectById } from "@/app/hooks/useProjectById";
 
 export default function Breadcrumbs() {
   const pathname = usePathname();
   const { projectId } = useParams();
 
-  const [projectsMap, setProjectsMap] = useState({});
-  const token = Cookies.get("access_token");
+  const { data: project } = useProjectById(projectId);
 
-  useEffect(() => {
-    const fetchProject = async () => {
-      if (!projectId) return;
+  const projectsMap = useMemo(() => {
+    if (!project) return {};
+    const projectName = project.name || project.title || project.project_name;
 
-      try {
-        const res = await fetch(
-          `https://pcufxstnppfqmzgslxlk.supabase.co/rest/v1/projects?select=id,name&id=eq.${projectId}`,
-          {
-            headers: {
-              apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          },
-        );
-
-        const data = await res.json();
-
-        const project = data?.[0];
-
-
-        if (project?.id && project?.name) {
-          setProjectsMap({
-            [project.id]: project.name,
-          });
-        }
-      } catch (err) {
-        console.error(err);
-      }
+    return {
+      [project.id || projectId]: projectName || "Project",
     };
-
-    fetchProject();
-  }, [projectId]);
+  }, [project, projectId]);
 
   const breadcrumbs = useMemo(() => {
-    return generateBreadcrumbs(pathname, projectsMap);
-  }, [pathname, projectsMap]);
+    return generateBreadcrumbs(pathname, projectsMap, projectId);
+  }, [pathname, projectsMap, projectId]);
 
   return (
     <nav className="flex mb-6" aria-label="Breadcrumb">
@@ -69,10 +43,13 @@ export default function Breadcrumbs() {
               </svg>
             )}
 
-            {breadcrumb.href.includes(projectId) ? (
-              <span className="text-sm font-medium text-blue-600 cursor-not-allowed">
+            {breadcrumb.isProject ? (
+              <Link
+                href={`/projects/${projectId}/edit`}
+                className="text-sm font-medium text-gray-400 hover:text-blue-600"
+              >
                 {breadcrumb.label}
-              </span>
+              </Link>
             ) : index === breadcrumbs.length - 1 ? (
               <span className="text-sm font-medium text-blue-600">
                 {breadcrumb.label}

@@ -1,6 +1,7 @@
 import { getTokens } from "@/app/lib/auth/getTokens";
 
-export async function GET(req) {
+
+export async function GET() {
   const { access_token } = await getTokens();
 
   if (!access_token) {
@@ -14,12 +15,8 @@ export async function GET(req) {
     return Response.json({ error: "Missing API key" }, { status: 500 });
   }
 
-  const searchParams = new URL(req.url).searchParams;
-  const limit = searchParams.get("limit") || "5";
-  const offset = searchParams.get("offset") || "0";
-
   const res = await fetch(
-    `${baseUrl}/rest/v1/rpc/get_projects?limit=${limit}&offset=${offset}`,
+    `${baseUrl}/rest/v1/rpc/get_projects`,
     {
       method: "GET",
       headers: {
@@ -37,10 +34,10 @@ export async function GET(req) {
     return Response.json(data, { status: res.status });
   }
 
-  const contentRange = res.headers.get("Content-Range");
-  const totalCount = Number(contentRange?.split("/")[1] ?? data.length ?? 0);
-
-  return Response.json({ data, totalCount });
+  return Response.json({
+    data,
+    totalCount: data?.length ?? 0,
+  });
 }
 
 export async function POST(req) {

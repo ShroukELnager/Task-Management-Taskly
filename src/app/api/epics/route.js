@@ -42,7 +42,6 @@ export async function GET(req) {
         apikey: apiKey,
         Authorization: `Bearer ${access_token}`,
 
-        // 👇 أهم سطر
         Range: id ? "0-0" : `${offset}-${offset + limit - 1}`,
         Prefer: "count=exact",
       },
@@ -68,9 +67,7 @@ export async function GET(req) {
   }
 }
 
-// =========================
-// POST EPIC
-// =========================
+
 export async function POST(req) {
   try {
     const { access_token } = await getTokens();

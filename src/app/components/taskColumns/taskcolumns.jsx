@@ -7,7 +7,7 @@ import TaskDetailsModal from "@/app/(dashboard)/projects/[projectId]/tasks/modal
 import { useDroppable } from "@dnd-kit/core";
 import TaskCard from "../taskCart";
 import { useDebounce } from "@/app/hooks/useDebounce";
-import useTasks from "@/app/api2/fetchTasks";
+import useTasks from "@/app/lib/tasks/fetchTasks";
 
 export default function TaskColumn({ status, projectId, search }) {
   const [selectedTaskId, setSelectedTaskId] = useState(null);

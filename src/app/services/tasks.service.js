@@ -30,7 +30,9 @@ async function handleResponse(res) {
   return data;
 }
 
-// ================= GET TASKS =================
+// =========================
+// GET PROJECT TASKS
+// =========================
 export async function getProjectTasks({
   projectId,
   epicId,
@@ -43,7 +45,14 @@ export async function getProjectTasks({
   if (projectId) params.append("project_id", `eq.${projectId}`);
   if (epicId) params.append("epic_id", `eq.${epicId}`);
   if (status) params.append("status", `eq.${status}`);
-  if (search.trim()) params.append("title", `ilike.*${search.trim()}*`);
+
+  // 🔥 FIXED SEARCH (Supabase/PostgREST safe + encoded)
+  if (search.trim()) {
+    params.append(
+      "title",
+      `ilike.%${search.trim()}%`
+    );
+  }
 
   const res = await fetch(`/api/tasks?${params.toString()}`, {
     method: "GET",
@@ -55,7 +64,9 @@ export async function getProjectTasks({
   return handleResponse(res);
 }
 
-// ================= TASK DETAILS =================
+// =========================
+// GET TASK DETAILS
+// =========================
 export async function getTaskDetails({ projectId, taskId }) {
   const params = new URLSearchParams();
 
@@ -71,7 +82,9 @@ export async function getTaskDetails({ projectId, taskId }) {
   return data?.data?.[0] || null;
 }
 
-// ================= CREATE =================
+// =========================
+// CREATE TASK
+// =========================
 export async function createTask(data) {
   const res = await fetch("/api/tasks", {
     method: "POST",
@@ -83,7 +96,9 @@ export async function createTask(data) {
   return handleResponse(res);
 }
 
-
+// =========================
+// UPDATE TASK
+// =========================
 export async function updateTask(id, data) {
   const res = await fetch(`/api/tasks/${id}`, {
     method: "PATCH",
@@ -96,7 +111,9 @@ export async function updateTask(id, data) {
   return handleResponse(res);
 }
 
-// ================= TASKS BY STATUS =================
+// =========================
+// GET TASKS BY STATUS
+// =========================
 export async function getTasksByStatus({
   projectId,
   status,
@@ -106,7 +123,14 @@ export async function getTasksByStatus({
 
   if (projectId) params.append("project_id", `eq.${projectId}`);
   if (status) params.append("status", `eq.${status}`);
-  if (search.trim()) params.append("title", `ilike.*${search.trim()}*`);
+
+  // 🔥 FIXED SEARCH (same rule)
+  if (search.trim()) {
+    params.append(
+      "title",
+      `ilike.%${search.trim()}%`
+    );
+  }
 
   const res = await fetch(`/api/tasks?${params.toString()}`, {
     method: "GET",

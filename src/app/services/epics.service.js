@@ -10,9 +10,7 @@ async function handleResponse(res) {
   return data;
 }
 
-// =========================
-// GET ALL EPICS
-// =========================
+
 export async function getEpics({
   projectId,
   page = 1,
@@ -39,18 +37,15 @@ export async function getEpics({
   return handleResponse(res);
 }
 
-// =========================
-// GET EPIC DETAILS (FIXED - IMPORTANT)
-// =========================
+
 export async function getEpicById({ projectId, id }) {
   const params = new URLSearchParams({
     project_id: projectId,
-    id, // will be converted in backend to eq.id
+    id, 
   });
 
   const res = await fetch(`/api/epics?${params.toString()}`, {
-    // 👈 SAME endpoint as list
-    // BUT backend will detect "id" and return single record
+  
     method: "GET",
     credentials: "include",
   });
@@ -59,9 +54,7 @@ export async function getEpicById({ projectId, id }) {
   return data?.data?.[0] || null;
 }
 
-// =========================
-// CREATE EPIC
-// =========================
+
 export async function createEpic(data) {
   const res = await fetch("/api/epics", {
     method: "POST",
@@ -75,9 +68,6 @@ export async function createEpic(data) {
   return handleResponse(res);
 }
 
-// =========================
-// UPDATE EPIC
-// =========================
 export async function updateEpic(id, data) {
   const res = await fetch(`/api/epics/${id}`, {
     method: "PATCH",

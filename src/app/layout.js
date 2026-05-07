@@ -33,6 +33,8 @@ export default async function RootLayout({ children }) {
 
         <StoreProvider accessToken={accessToken}>
           {children}
+                  <div id="modal-root"></div>
+
         </StoreProvider>
          </QueryClientProvider>
       </body>

@@ -16,7 +16,6 @@ export async function GET(req) {
       return handleError("No token found", 401);
     }
 
-    // ✅ check env
     if (!baseUrl || !apiKey) {
       return handleError("Server configuration error", 500);
     }
@@ -24,7 +23,6 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const project_id = searchParams.get("project_id");
 
-    // ✅ validation
     if (!project_id) {
       return handleError("project_id is required", 400);
     }
@@ -40,7 +38,6 @@ export async function GET(req) {
       }
     );
 
-    // ✅ handle API errors
     if (!res.ok) {
       const errorData = await res.json();
       return handleError(
