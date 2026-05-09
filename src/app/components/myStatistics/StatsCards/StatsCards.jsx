@@ -23,18 +23,18 @@ export default function StatsCards({ data }) {
   ];
 
   return (
-    <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+    <div className="mb-6 grid grid-cols-3 gap-3 md:grid-cols-3">
       {cards.map((c, i) => (
         <div
           key={i}
-          className="flex min-h-[112px] items-center justify-between gap-4 rounded-lg bg-white p-4 text-left shadow-sm md:p-5"
+          className="flex flex-col items-center justify-center rounded-2xl bg-white p-4 text-center shadow-sm md:flex-row md:items-center md:justify-between md:p-5 md:text-left"
         >
-          <div className="order-2 shrink-0 rounded-lg bg-[#F1F3FF] p-3">
+          <div className="order-1 rounded-xl bg-[#F1F3FF] p-3 md:order-2">
             <Image src={c.img} alt="icon" width={20} height={20} />
           </div>
 
-          <div className="order-1 min-w-0">
-            <p className="mb-2 truncate text-xs text-gray-400 md:text-sm">
+          <div className="order-2 mt-3 md:order-1 md:mt-0">
+            <p className="mb-1 text-xs text-gray-400 md:mb-2 md:text-sm">
               {c.title}
             </p>
 
