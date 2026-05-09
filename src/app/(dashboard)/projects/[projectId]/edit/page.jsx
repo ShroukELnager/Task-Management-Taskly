@@ -1,105 +1,54 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
+import { useProject, useUpdateProject } from "@/app/hooks/useProject";
+
 export default function EditProjectPage() {
   const router = useRouter();
-
   const { projectId } = useParams();
 
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading } = useProject(projectId);
+  const { mutate: updateProjectMutate, isPending } = useUpdateProject();
 
   const {
     register,
     handleSubmit,
     setValue,
     watch,
-    formState: { errors, isSubmitting },
-  } = useForm({
-    mode: "onSubmit",
-  });
+    formState: { errors },
+  } = useForm({ mode: "onSubmit" });
 
   const description = watch("description") || "";
 
+  // fill form when data arrives
   useEffect(() => {
-    const fetchProject = async () => {
-      try {
-        const token = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("access_token="))
-          ?.split("=")[1];
-
-        const res = await fetch(
-          `https://pcufxstnppfqmzgslxlk.supabase.co/rest/v1/projects?id=eq.${projectId}`,
-          {
-            method: "GET",
-            headers: {
-              apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          },
-        );
-
-        const data = await res.json();
-
-        if (data?.[0]) {
-          setValue("name", data[0].name);
-          setValue("description", data[0].description);
-        }
-      } catch (err) {
-        console.error(err);
-        toast.error("Failed to load project");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProject();
-  }, [projectId, setValue]);
-
-  const onSubmit = async (data) => {
-    try {
-      const token = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("access_token="))
-        ?.split("=")[1];
-
-      const res = await fetch(
-        `https://pcufxstnppfqmzgslxlk.supabase.co/rest/v1/projects?id=eq.${projectId}`,
-        {
-          method: "PATCH",
-          headers: {
-            apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: data.name,
-            description: data.description,
-          }),
-        },
-      );
-
-      if (!res.ok) {
-        toast.error("Failed to update project");
-        return;
-      }
-
-      toast.success("Project updated successfully");
-
-      router.push("/projects");
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
+    if (data) {
+      setValue("name", data.name);
+      setValue("description", data.description);
     }
+  }, [data, setValue]);
+
+  const onSubmit = (formData) => {
+    updateProjectMutate(
+      { id: projectId, data: formData },
+      {
+        onSuccess: () => {
+          toast.success("Project updated successfully");
+          router.push("/projects");
+        },
+        onError: () => {
+          toast.error("Failed to update project");
+        },
+      }
+    );
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex min-h-[320px] items-center justify-center">
         <p>Loading project...</p>
@@ -111,8 +60,6 @@ export default function EditProjectPage() {
     <div className="mx-auto flex w-full max-w-[1500px] flex-col bg-gray-50 pb-10">
       <div className="flex items-center justify-between py-4">
         <h1 className="text-2xl font-semibold sm:text-3xl">Edit Project</h1>
-
-      
       </div>
 
       <div className="flex flex-1 justify-center">
@@ -121,8 +68,9 @@ export default function EditProjectPage() {
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-5 p-4 sm:p-6"
           >
-            <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#E5EEFA]">
+            {/* header */}
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#E5EEFA]">
                 <Image
                   src="/images/projIcon.svg"
                   alt="project"
@@ -131,59 +79,62 @@ export default function EditProjectPage() {
                 />
               </div>
 
-              <div className="min-w-0">
-                <h1 className="font-semibold text-lg">Edit Project Details</h1>
+              <div>
+                <h1 className="font-semibold text-lg">
+                  Edit Project Details
+                </h1>
                 <p className="text-gray-600 text-sm">
                   Update your project information
                 </p>
               </div>
             </div>
 
+            {/* name */}
             <div className="flex flex-col gap-2">
               <label className="text-xs text-gray-500">Project name</label>
-
               <input
                 {...register("name", { required: "Name is required" })}
                 className={`bg-[#D7E2FF] rounded-md px-4 py-3 outline-none ${
                   errors.name ? "border border-red-500" : ""
                 }`}
               />
-
               {errors.name && (
-                <p className="text-red-500 text-sm">{errors.name.message}</p>
+                <p className="text-red-500 text-sm">
+                  {errors.name.message}
+                </p>
               )}
             </div>
 
+            {/* description */}
             <div className="flex flex-col gap-2">
               <label className="text-xs text-gray-500">Description</label>
-
               <textarea
                 {...register("description")}
                 rows={5}
                 maxLength={500}
                 className="bg-[#D7E2FF] rounded-md px-4 py-3 resize-none outline-none"
               />
-
               <p className="text-xs text-gray-500 text-right">
                 {description.length}/500
               </p>
             </div>
 
-            <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:justify-between">
+            {/* buttons */}
+            <div className="mt-3 flex justify-between">
               <button
                 type="button"
                 onClick={() => router.push("/projects")}
-                className="text-gray-500 hover:text-black"
+                className="text-gray-500"
               >
                 Cancel
               </button>
 
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="bg-[#014CBF] text-white px-4 py-2 rounded-md hover:bg-blue-600 disabled:opacity-50"
+                disabled={isPending}
+                className="bg-[#014CBF] text-white px-4 py-2 rounded-md disabled:opacity-50"
               >
-                {isSubmitting ? "Saving..." : "Save Changes"}
+                {isPending ? "Saving..." : "Save Changes"}
               </button>
             </div>
           </form>
