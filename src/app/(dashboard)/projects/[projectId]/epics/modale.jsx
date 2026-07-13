@@ -320,7 +320,6 @@ export default function EpicDetailsModal({
                       }
                       className="text-sm outline-none bg-transparent w-full"
                     >
-                      <option value="">Unassigned</option>
                       {members.map((m) => (
                         <option key={m.user_id} value={m.user_id}>
                           {m.metadata?.name || m.email}

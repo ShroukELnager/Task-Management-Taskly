@@ -115,7 +115,7 @@ export default function EditProjectPage() {
               <button
                 type="button"
                 onClick={() => router.push("/projects")}
-                className="text-gray-500"
+                className="text-gray-500 cursor-pointer"
               >
                 Cancel
               </button>
@@ -123,7 +123,7 @@ export default function EditProjectPage() {
               <button
                 type="submit"
                 disabled={isPending}
-                className="bg-[#014CBF] text-white px-4 py-2 rounded-md disabled:opacity-50"
+                className="bg-[#014CBF] cursor-pointer text-white px-4 py-2 rounded-md disabled:opacity-50"
               >
                 {isPending ? "Saving..." : "Save Changes"}
               </button>

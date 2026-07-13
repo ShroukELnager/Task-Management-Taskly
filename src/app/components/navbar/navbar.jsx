@@ -20,9 +20,9 @@ export default function Navbar() {
   const dropdownRef = useRef();
   const router = useRouter();
 
-  const name = user?.name || "No name provided";
+  const name = user?.name || "User";
 
-  const jobTitle = user?.jobTitle || "No job title provided";
+  const jobTitle = user?.jobTitle
 
   const email = user?.email || "No email";
 

@@ -13,6 +13,5 @@ export async function getProjectMembers(projectId) {
     method: "GET",
     credentials: "include",
   });
-
   return handleResponse(res);
 }

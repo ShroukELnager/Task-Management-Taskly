@@ -145,14 +145,14 @@ export default function CreateEpic() {
                 onClick={() =>
                   router.push(`/projects/${projectId}/epics`)
                 }
-                className="text-gray-500"
+                className="text-gray-500 cursor-pointer"
               >
                 Cancel
               </button>
 
               <button
                 disabled={isSubmitting || createEpicMutation.isPending}
-                className="bg-[#014CBF] text-white px-5 py-2 rounded-md hover:bg-blue-600"
+                className="bg-[#014CBF] cursor-pointer text-white px-5 py-2 rounded-md hover:bg-blue-600"
               >
                 {isSubmitting || createEpicMutation.isPending
                   ? "Creating..."

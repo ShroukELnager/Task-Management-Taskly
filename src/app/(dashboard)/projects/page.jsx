@@ -76,7 +76,7 @@ const projects = Array.from(
 
           <button
             onClick={() => router.push("/projects/create")}
-            className="hidden sm:flex bg-[#014CBF] text-white py-2 px-4 rounded-md hover:bg-blue-600 items-center gap-2 whitespace-nowrap"
+            className="hidden cursor-pointer sm:flex bg-[#014CBF] text-white py-2 px-4 rounded-md hover:bg-blue-600 items-center gap-2 whitespace-nowrap"
           >
             <Image src="/images/plus.svg" alt="plus" width={16} height={16} />
             <p className="text-sm font-medium whitespace-nowrap">
@@ -134,7 +134,7 @@ const projects = Array.from(
                       e.stopPropagation();
                       router.push(`/projects/${project.id}/edit`);
                     }}
-                    className="mt-4 text-sm bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded-md transition"
+                    className="mt-4 cursor-pointer text-sm bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded-md transition"
                   >
                     Edit
                   </button>
@@ -184,7 +184,7 @@ const projects = Array.from(
 
       <button
         onClick={() => router.push("/projects/create")}
-        className="sm:hidden fixed bottom-6 right-6 w-12 h-12 flex items-center justify-center rounded-full bg-[#014CBF] text-white shadow-lg hover:bg-blue-600 transition z-50"
+        className="sm:hidden cursor-pointer fixed bottom-6 right-6 w-12 h-12 flex items-center justify-center rounded-full bg-[#014CBF] text-white shadow-lg hover:bg-blue-600 transition z-50"
       >
         <Image src="/images/plus.svg" alt="plus" width={20} height={20} />
       </button>

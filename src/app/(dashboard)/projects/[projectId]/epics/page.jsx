@@ -99,7 +99,7 @@ export default function EpicsPage() {
 
             <button
               onClick={() => router.push(`/projects/${projectId}/epics/create`)}
-              className="hidden lg:flex bg-[#014CBF] text-white px-4 py-2 rounded-md text-sm"
+              className="hidden cursor-pointer lg:flex bg-[#014CBF] text-white px-4 py-2 rounded-md text-sm"
             >
               + New Epic
             </button>
@@ -177,7 +177,7 @@ export default function EpicsPage() {
 
       <button
         onClick={() => router.push(`/projects/${projectId}/epics/create`)}
-        className="lg:hidden fixed bottom-6 right-6 w-12 h-12 rounded-full bg-[#014CBF] text-white"
+        className="lg:hidden cursor-pointer fixed bottom-6 right-6 w-12 h-12 rounded-full bg-[#014CBF] text-white"
       >
         +
       </button>
