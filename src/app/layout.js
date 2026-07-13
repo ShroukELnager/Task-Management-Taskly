@@ -4,6 +4,7 @@ import StoreProvider from "./StoreProvider";
 import { cookies } from "next/headers";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./providers/queryClient";
+import { Toaster } from "react-hot-toast";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -33,6 +34,13 @@ export default async function RootLayout({ children }) {
 
         <StoreProvider accessToken={accessToken}>
           {children}
+              <Toaster
+          position="top-right"
+          reverseOrder={false}
+          toastOptions={{
+            duration: 3000,
+          }}
+        />
                   <div id="modal-root"></div>
 
         </StoreProvider>
