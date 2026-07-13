@@ -8,10 +8,12 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import Cookies from "js-cookie";
 
 import { SignupSchema } from "../components/schema/signupSchema";
 import { setAccessToken, setUser } from "../features/users/userSlice";
 import { signup } from "../services/auth.service";
+import { getValidAccessToken } from "../lib/auth/auth";
 
 export default function Signup() {
   const router = useRouter();
@@ -36,17 +38,32 @@ export default function Signup() {
   const mutation = useMutation({
     mutationFn: signup,
 
-    onSuccess: (result) => {
+    onSuccess: async (result) => {
       if (!result?.user) {
         setApiError("Signup failed. Please try again.");
         return;
       }
 
-      const { user, access_token } = result;
+      const { user, access_token, refresh_token, expires_at } = result;
 
-      if (user) dispatch(setUser(user));
-      if (access_token) dispatch(setAccessToken(access_token));
+      if (access_token && refresh_token && expires_at) {
+        const expiresDate = new Date(expires_at * 1000);
 
+        const cookieOptions = {
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          expires: expiresDate,
+        };
+
+        Cookies.set("access_token", access_token, cookieOptions);
+        Cookies.set("refresh_token", refresh_token, cookieOptions);
+        Cookies.set("access_token_expiry", expires_at, cookieOptions);
+
+        const validToken = await getValidAccessToken();
+        dispatch(setAccessToken(validToken || access_token));
+      }
+
+      dispatch(setUser(user));
       router.push("/projects");
     },
 

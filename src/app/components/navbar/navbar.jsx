@@ -19,9 +19,9 @@ export default function Navbar() {
   const dropdownRef = useRef();
   const router = useRouter();
 
-  const name = user?.user_metadata?.name || "No name provided";
+  const name = user?.name || "No name provided";
 
-  const jobTitle = user?.user_metadata?.job_title || "No job title provided";
+  const jobTitle = user?.jobTitle || "No job title provided";
 
   const email = user?.email || "No email";
 

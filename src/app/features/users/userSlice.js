@@ -1,5 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchUsers } from "./usersThunk";
+
+function normalizeUser(user) {
+  if (!user) return null;
+
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.user_metadata?.name ?? user.name ?? null,
+    jobTitle: user.user_metadata?.job_title ?? user.jobTitle ?? null,
+    emailVerified: user.user_metadata?.email_verified ?? user.emailVerified ?? null,
+    phone: user.phone ?? null,
+    createdAt: user.created_at ?? user.createdAt ?? null,
+    lastSignIn: user.last_sign_in_at ?? user.lastSignIn ?? null,
+  };
+}
+
 const initialState = {
   user: null,
   accessToken: null,
@@ -17,7 +33,7 @@ const usersSlice = createSlice({
     },
 
     setUser: (state, action) => {
-      state.user = action.payload;
+      state.user = normalizeUser(action.payload);
     },
   },
 
@@ -31,18 +47,7 @@ const usersSlice = createSlice({
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.loading = false;
 
-        const user = action.payload;
-
-        state.user = {
-          id: user.id,
-          email: user.email,
-          name: user.user_metadata?.name,
-          jobTitle: user.user_metadata?.job_title,
-          emailVerified: user.user_metadata?.email_verified,
-          phone: user.phone,
-          createdAt: user.created_at,
-          lastSignIn: user.last_sign_in_at,
-        };
+        state.user = normalizeUser(action.payload);
       })
 
       .addCase(fetchUsers.rejected, (state, action) => {
