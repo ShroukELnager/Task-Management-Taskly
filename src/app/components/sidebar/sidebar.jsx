@@ -205,13 +205,13 @@ const { mutate: handleLogout, isPending } = useMutation({
               alt=""
               className="shrink-0"
             />
-            {open && <span className="text-sm">Collapse</span>}
+            {open && <span className="text-sm cursor-pointer">Collapse</span>}
           </button>
 
           <button
             onClick={() => handleLogout()}
             disabled={isPending}
-            className={`flex items-center rounded-md py-3 hover:bg-gray-100 transition ${
+            className={`flex items-center cursor-pointer rounded-md py-3 hover:bg-gray-100 transition ${
               showLabels ? "gap-3 px-4" : "justify-center px-0"
             } disabled:cursor-not-allowed disabled:opacity-60`}
           >

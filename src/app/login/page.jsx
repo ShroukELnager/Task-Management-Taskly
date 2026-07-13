@@ -155,14 +155,14 @@ export default function Login() {
 
           <button
             disabled={mutation.isPending}
-            className="w-full bg-[#014DC0] text-white h-12 rounded-md"
+            className="w-full bg-[#014DC0] text-white h-12 cursor-pointer rounded-md"
           >
             {mutation.isPending ? "Logging in..." : "Log In"}
           </button>
 
           <p className="text-sm text-center">
             Don’t have an account?{" "}
-            <Link href="/signup" className="text-[#014DC0] font-semibold">
+            <Link href="/signup" className="text-[#014DC0] cursor-pointer font-semibold">
               Sign up
             </Link>
           </p>

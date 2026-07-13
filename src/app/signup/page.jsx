@@ -214,14 +214,14 @@ export default function Signup() {
 
           <button
             disabled={mutation.isPending}
-            className="w-full bg-[#014DC0] text-white h-12 rounded-md hover:opacity-90 transition"
+            className="w-full bg-[#014DC0] cursor-pointer text-white h-12 rounded-md hover:opacity-90 transition"
           >
             {mutation.isPending ? "Creating Account..." : "Create Account"}
           </button>
 
           <p className="text-center text-sm pt-6">
             Already have an account?{" "}
-            <Link href="/login" className="text-blue-600 font-semibold">
+            <Link href="/login" className="text-blue-600 cursor-pointer font-semibold">
               Log in
             </Link>
           </p>
