@@ -1,5 +1,5 @@
 export async function signup(data) {
-  const res = await fetch("/api/auth/signup", {
+  const res = await fetch("/api/auth/signUp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),

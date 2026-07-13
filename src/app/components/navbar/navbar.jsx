@@ -11,6 +11,7 @@ import { logout } from "@/app/services/auth.service";
 
 export default function Navbar() {
   const user = useSelector((state) => state.users.user);
+  console.log("user",user)
   const dispatch = useDispatch();
 
   const [error, setError] = useState("");
